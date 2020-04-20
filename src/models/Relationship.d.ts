@@ -9,18 +9,26 @@ export declare class Relationship {
     private GetRandomType;
 }
 export declare enum FamilyRelationshipType {
-    mother = "mother of",
-    father = "father of",
-    child = "child of",
-    divorced = "divorced",
-    spouse = "spouse"
+    mother = "Mother of",
+    father = "Father of",
+    child = "Child of",
+    divorced = "Divorced",
+    spouse = "Spouse"
 }
 export declare enum SocialRelationshipType {
     friends = "Friends",
     knows = "Knows",
     likes = "Likes",
-    loves = "Loves",
-    dating = "Dates",
     dislikes = "Dislikes",
-    affair = "Has an affair"
+    hates = "Hates",
+    admires = "Admires",
+    bestFriends = "Best Friends",
+    wormates = "Workmates"
+}
+export declare enum RomanticRelationshipTypes {
+    loves = "Loves",
+    dates = "Dates",
+    affair = "Has an affair",
+    stalks = "Stalks",
+    adores = "Adores"
 }

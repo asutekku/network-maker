@@ -112,9 +112,10 @@ class SocialGenerator {
             let relationShipCount = this.options.minRelationship + Math.round(Math.random() * this.options.maxRelationship);
             for (let i = 0; i < relationShipCount; i++) {
                 let target = this.collection.people.getRandom();
-                if (target.relationShips.length == this.options.maxRelationship || target.family_id === p.family_id) return;
+                if (target.relationShips.length >= this.options.maxRelationship || target.family_id === p.family_id) return;
                 let rel = new Relationship(p.id, target.id);
                 p.addRelationShip(rel);
+                target.addRelationShip(rel);
                 this.collection.relationships.add(rel);
             }
         })

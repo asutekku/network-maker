@@ -25,19 +25,29 @@ export class Relationship {
 
 
 export enum FamilyRelationshipType {
-    mother = "mother of",
-    father = "father of",
-    child = "child of",
-    divorced = "divorced",
-    spouse = "spouse",
+    mother = "Mother of",
+    father = "Father of",
+    child = "Child of",
+    divorced = "Divorced",
+    spouse = "Spouse",
 }
 
 export enum SocialRelationshipType {
     friends = "Friends",
     knows = "Knows",
     likes = "Likes",
-    loves = "Loves",
-    dating = "Dates",
     dislikes = "Dislikes",
+    hates = "Hates",
+    admires = "Admires",
+    bestFriends = "Best Friends",
+    wormates = "Workmates",
+
+}
+
+export enum RomanticRelationshipTypes {
+    loves = "Loves",
+    dates = "Dates",
     affair = "Has an affair",
+    stalks = "Stalks",
+    adores = "Adores"
 }
