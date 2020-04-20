@@ -18,4 +18,8 @@ export class Relationships {
     public getAll(): Relationship[] {
         return this.relationShips;
     }
+
+    public clear(): void {
+        this.relationShips = [];
+    }
 }

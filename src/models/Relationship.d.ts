@@ -4,22 +4,23 @@ export declare class Relationship {
     from: number;
     to: number;
     mutual: boolean;
-    type: RelationShipType;
-    constructor(from: number, to: number, type?: RelationShipType, mutual?: boolean);
-    static GetRandom(): void;
+    type: FamilyRelationshipType | SocialRelationshipType;
+    constructor(from: number, to: number, type?: FamilyRelationshipType | SocialRelationshipType, mutual?: boolean);
+    private GetRandomType;
 }
-export declare enum RelationShipType {
-    knows = "Knows",
-    likes = "likes",
-    loves = "loves",
-    spouse = "spouse",
-    dating = "dating",
-    dislikes = "dislikes",
-    affair = "affair",
+export declare enum FamilyRelationshipType {
     mother = "mother of",
     father = "father of",
     child = "child of",
-    friends = "friends",
     divorced = "divorced",
-    family = "family"
+    spouse = "spouse"
+}
+export declare enum SocialRelationshipType {
+    friends = "Friends",
+    knows = "Knows",
+    likes = "Likes",
+    loves = "Loves",
+    dating = "Dates",
+    dislikes = "Dislikes",
+    affair = "Has an affair"
 }

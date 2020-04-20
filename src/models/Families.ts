@@ -23,4 +23,8 @@ export class Families {
         return this.families;
     }
 
+    public clear(): void {
+        this.families = [];
+    }
+
 }

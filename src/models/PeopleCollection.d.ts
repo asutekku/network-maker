@@ -6,4 +6,5 @@ export declare class PeopleCollection {
     families: Families;
     relationships: Relationships;
     constructor();
+    clear(): void;
 }

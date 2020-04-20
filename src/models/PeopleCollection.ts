@@ -13,4 +13,10 @@ export class PeopleCollection {
         this.families = new Families();
         this.relationships = new Relationships();
     }
+
+    public clear(){
+        this.people.clear();
+        this.families.clear();
+        this.relationships.clear();
+    }
 }

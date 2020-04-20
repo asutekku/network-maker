@@ -5,4 +5,5 @@ export declare class Relationships {
     add(relationship: Relationship): void;
     addMultiple(relationships: Relationship[]): void;
     getAll(): Relationship[];
+    clear(): void;
 }

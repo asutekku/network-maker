@@ -1,5 +1,5 @@
 import {femaleNames, maleNames, surnames} from "./names";
-import {Relationship, RelationShipType} from "./Relationship";
+import {Relationship, FamilyRelationshipType} from "./Relationship";
 
 interface personParams {
     gender?: "female" | "male" | "unspecified";
@@ -71,7 +71,7 @@ export class Person {
         return gender === "female" ? femaleNames[~~(Math.random() * femaleNames.length)] : maleNames[~~(Math.random() * maleNames.length)];
     }
 
-    public newRelationship(person: Person, type?: RelationShipType, mutual?: boolean) {
+    public newRelationship(person: Person, type?: FamilyRelationshipType, mutual?: boolean) {
         let relationShip = new Relationship(this.id, person.id);
         this._relationShips.push(relationShip);
         if (relationShip.mutual) {

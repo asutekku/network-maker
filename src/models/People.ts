@@ -23,6 +23,10 @@ export class People {
         this.people = [...people, ...this.people];
     }
 
+    public getRandom(): Person {
+        return this.people[Math.floor(Math.random() * this.people.length)]
+    }
+
     public removeByID(id: number): void {
         this.people = this.people.filter((p: Person) => p.id != id);
     }
@@ -38,5 +42,9 @@ export class People {
 
     public getFamilyByID(family_id: number): Person[] | undefined {
         return this.people.filter((p: Person) => p.family_id === family_id);
+    }
+
+    public clear(): void {
+        this.people = [];
     }
 }

@@ -6,4 +6,5 @@ export declare class Families {
     add(family: Family): void;
     getFamilyByID(id: number): void;
     all(): Family[];
+    clear(): void;
 }

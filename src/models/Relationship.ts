@@ -6,35 +6,38 @@ export class Relationship {
     from: number;
     to: number;
     mutual: boolean;
-    type: RelationShipType;
+    type: FamilyRelationshipType | SocialRelationshipType;
 
-    constructor(from: number, to: number, type?: RelationShipType, mutual?: boolean) {
+    constructor(from: number, to: number, type?: FamilyRelationshipType | SocialRelationshipType, mutual?: boolean) {
         this.id = Relationship.next_id;
         Relationship.next_id++;
         this.from = from;
         this.to = to;
-        this.mutual = mutual ? mutual : false;
-        this.type = type ? type : RelationShipType.knows;
+        this.mutual = mutual ? mutual : Math.random() <= 0.5;
+        this.type = type ? type : this.GetRandomType();
     }
 
-    public static GetRandom() {
-
+    private GetRandomType(): SocialRelationshipType {
+        let types: SocialRelationshipType[] = Object.values(SocialRelationshipType);
+        return types[~~(Math.random() * types.length)];
     }
 }
 
 
-export enum RelationShipType {
-    knows = "Knows",
-    likes = "likes",
-    loves = "loves",
-    spouse = "spouse",
-    dating = "dating",
-    dislikes = "dislikes",
-    affair = "affair",
+export enum FamilyRelationshipType {
     mother = "mother of",
     father = "father of",
     child = "child of",
-    friends = "friends",
     divorced = "divorced",
-    family = "family"
+    spouse = "spouse",
+}
+
+export enum SocialRelationshipType {
+    friends = "Friends",
+    knows = "Knows",
+    likes = "Likes",
+    loves = "Loves",
+    dating = "Dates",
+    dislikes = "Dislikes",
+    affair = "Has an affair",
 }
