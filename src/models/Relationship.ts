@@ -13,7 +13,7 @@ export class Relationship {
         Relationship.next_id++;
         this.from = from;
         this.to = to;
-        this.mutual = mutual ? mutual : Math.random() <= 0.5;
+        this.mutual = mutual !== undefined ? mutual : Math.random() <= 0.5;
         this.type = type ? type : this.GetRandomType();
     }
 
