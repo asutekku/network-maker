@@ -1,14 +1,16 @@
-import {Data, Edge, Network, Node} from "vis";
+import {Data, DataSet, Edge, Network, Node} from "vis";
 import {PeopleCollection} from "./models/PeopleCollection";
 import {Family} from "./models/Family";
 import {Person} from "./models/Person";
 import {Relationship, FamilyRelationshipType} from "./models/Relationship";
-import {surnames} from "./models/names";
 
 class SocialGenerator {
     private static collection = new PeopleCollection();
     public static network: Network;
+    public static nodesDataset: DataSet<Node>;
+    public static edgesDataset: DataSet<Edge>;
     public static data: Data;
+    private static highlightActive = false;
 
     private static options = {
         familyCount: 10,
@@ -17,7 +19,8 @@ class SocialGenerator {
         minRelationship: 0,
         maxRelationship: 2,
         singleProbability: 20,
-        singles: true
+        singles: true,
+        nationality: "american"
     };
 
     public static main(): void {
@@ -35,17 +38,22 @@ class SocialGenerator {
 
         for (let i = 0; i < this.options.familyCount; i++) {
 
-            const FamilyIsSingle = this.options.singleProbability > Math.random() * 100;
+            const FamilyIsSingle = (this.options.singleProbability > Math.random() * 100) && this.options.singles;
+            console.log(FamilyIsSingle);
             let family = new Family();
             if (FamilyIsSingle) {
-                let person = new Person();
+                let person = new Person({nationality: this.options.nationality});
                 family.add(person);
                 this.collection.people.add(person);
             } else {
                 let children: Person[] = [];
                 let relationships: Relationship[] = [];
-                let person1 = new Person({gender: "male"});
-                let person2 = new Person({gender: "female", surname: person1.surname});
+                let person1 = new Person({gender: "male", nationality: this.options.nationality});
+                let person2 = new Person({
+                    gender: "female",
+                    surname: person1.surname,
+                    nationality: this.options.nationality
+                });
                 let relationship = new Relationship(person1.id, person2.id, FamilyRelationshipType.spouse, true);
                 person1.addRelationShip(relationship);
                 relationships.push(relationship);
@@ -53,7 +61,7 @@ class SocialGenerator {
                 const childCount = this.options.minChildren + Math.round(Math.random() * this.options.maxChildren);
                 for (let i = 0; i < childCount; i++) {
                     const age = ~~(Math.random() * 18);
-                    let child = new Person({age: age, surname: person1.surname});
+                    let child = new Person({age: age, surname: person1.surname, nationality: this.options.nationality});
                     let rel1 = new Relationship(person1.id, child.id, FamilyRelationshipType.father, false);
                     let rel2 = new Relationship(person2.id, child.id, FamilyRelationshipType.mother, false);
                     person1.addRelationShip(rel1);
@@ -74,9 +82,13 @@ class SocialGenerator {
     private static createData() {
         const nodes = this.createNodes();
         const edges = this.createEdges();
+        // @ts-ignore0
+        this.nodesDataset = new vis.DataSet(nodes);
+        // @ts-ignore
+        this.edgesDataset = new vis.DataSet(edges);
         this.data = {
-            nodes: nodes,
-            edges: edges
+            nodes: this.nodesDataset,
+            edges: this.edgesDataset
         };
     }
 
@@ -89,14 +101,41 @@ class SocialGenerator {
         this.createData();
         const options = {
             nodes: {
-                shape: "box"
+                shape: "box",
+                scaling: {
+                    min: 10,
+                    max: 30,
+                    label: {
+                        min: 8,
+                        max: 30,
+                        drawThreshold: 5,
+                        maxVisible: 20
+                    }
+                }
             },
-            physics: true,
+            edges: {
+                width: 0.15,
+                color: {inherit: "from"},
+                smooth: {
+                    type: "horizontal"
+                }, scaling: {
+                    min: 10,
+                    max: 30,
+                    label: {
+                        min: 8,
+                        max: 30,
+                        drawThreshold: 10,
+                        maxVisible: 30
+                    }
+                },
+            },
+            physics: false,
         };
         const container = document.getElementById("socialNetwork");
         // @ts-ignore
         this.network = new vis.Network(container!, this.data, options);
         this.network.on("click", function (params: any) {
+            SocialGenerator.neighbourhoodHighlight(params);
             params.event = "[original event]";
             if (params.nodes.length == 1) {
                 if (SocialGenerator.network.isCluster(params.nodes[0])) {
@@ -151,6 +190,15 @@ class SocialGenerator {
             this.options.singleProbability = e.target.value;
         });
 
+        setListener("singlesBox", "input", (e: any) => {
+            this.options.singles = e.target.checked;
+        });
+
+        setListener("nationalityChange", "input", (e: any) => {
+            console.log(e.target.value);
+            this.options.nationality = e.target.value;
+        });
+
         GenerateGraph.addEventListener("click", () => {
             this.updateGraph()
         });
@@ -159,6 +207,7 @@ class SocialGenerator {
             console.log(e.target.value)
             this.options.maxChildren = parseInt(e.target.value);
         });
+
         childrenMin.addEventListener("input", (e: any) => {
             this.options.minChildren = parseInt(e.target.value);
         });
@@ -177,12 +226,11 @@ class SocialGenerator {
             let id = i;
             clusterOptionsByData = {
                 joinCondition: (childOptions: any) => {
-                    console.log(childOptions);
                     return childOptions.cid == id.toString(); // the color is fully defined in the node.
                 },
                 processProperties: (clusterOptions: any, childNodes: Node[], childEdges: Edge[]) => {
-                    var totalMass = 0;
-                    for (var i = 0; i < childNodes.length; i++) {
+                    let totalMass = 0;
+                    for (let i = 0; i < childNodes.length; i++) {
                         totalMass += childNodes[i].mass!;
                     }
                     clusterOptions.mass = totalMass;
@@ -196,6 +244,84 @@ class SocialGenerator {
             };
             this.network.cluster(clusterOptionsByData);
         }
+    }
+
+    private static neighbourhoodHighlight(params: any) {
+        // if something is selected:
+
+        let allNodes: any[] = this.nodesDataset.get({returnType: "Object"});
+        if (params.nodes.length > 0) {
+            this.highlightActive = true;
+            let i, j;
+            let selectedNode = params.nodes[0];
+            let degrees = 2;
+
+            // mark all nodes as hard to read.
+            for (let nodeId in allNodes) {
+                allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+                /*                if (allNodes[nodeId].hiddenLabel === undefined) {
+                                    allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+                                    allNodes[nodeId].label = undefined;
+                                }*/
+            }
+            let connectedNodes: any[] = SocialGenerator.network.getConnectedNodes(selectedNode);
+            let allConnectedNodes: any[] = [];
+
+            // get the second degree nodes
+            for (i = 1; i < degrees; i++) {
+                for (j = 0; j < connectedNodes.length; j++) {
+                    allConnectedNodes = allConnectedNodes.concat(
+                        SocialGenerator.network.getConnectedNodes(connectedNodes[j])
+                    );
+                }
+            }
+
+            // all second degree nodes get a different color and their label back
+            for (i = 0; i < allConnectedNodes.length; i++) {
+                allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+                if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+                    allNodes[allConnectedNodes[i]].label =
+                        allNodes[allConnectedNodes[i]].hiddenLabel;
+                    allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+                }
+            }
+
+            // all first degree nodes get their own color and their label back
+            for (i = 0; i < connectedNodes.length; i++) {
+                allNodes[connectedNodes[i]].color = undefined;
+                if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+                    allNodes[connectedNodes[i]].label =
+                        allNodes[connectedNodes[i]].hiddenLabel;
+                    allNodes[connectedNodes[i]].hiddenLabel = undefined;
+                }
+            }
+
+            // the main node gets its own color and its label back.
+            allNodes[selectedNode].color = undefined;
+            if (allNodes[selectedNode].hiddenLabel !== undefined) {
+                allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+                allNodes[selectedNode].hiddenLabel = undefined;
+            }
+        } else if (this.highlightActive === true) {
+            // reset all nodes
+            for (let nodeId in allNodes) {
+                allNodes[nodeId].color = undefined;
+                if (allNodes[nodeId].hiddenLabel !== undefined) {
+                    allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+                    allNodes[nodeId].hiddenLabel = undefined;
+                }
+            }
+            this.highlightActive = false;
+        }
+
+        // transform the object into an array
+        let updateArray = [];
+        for (let nodeId in allNodes) {
+            if (allNodes.hasOwnProperty(nodeId)) {
+                updateArray.push(allNodes[nodeId]);
+            }
+        }
+        this.nodesDataset.update(updateArray);
     }
 
     private static createNodes(): Node[] {

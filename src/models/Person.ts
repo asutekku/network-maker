@@ -7,9 +7,18 @@ interface personParams {
     familyID?: number;
     firstName?: string;
     surname?: string;
+    nationality?: string;
 }
 
 export class Person {
+    get nationality(): string {
+        return this._nationality;
+    }
+
+    set nationality(value: string) {
+        this._nationality = value;
+    }
+
     get relationShips(): Relationship[] {
         return this._relationShips;
     }
@@ -51,11 +60,13 @@ export class Person {
     private _family_id: number;
     private _age: number;
     private _relationShips: Relationship[];
+    private _nationality: string;
 
     constructor(params?: personParams) {
+        this._nationality = params && params.nationality ? params.nationality : "american";
         this._gender = params && params.gender ? params.gender : (Math.random() < 0.5) ? 'male' : 'female';
-        this._firstName = params && params.firstName ? params.firstName : Person.getName(this._gender);
-        this._surname = params && params.surname ? params.surname : surnames[~~(Math.random() * surnames.length)];
+        this._firstName = params && params.firstName ? params.firstName : Person.getName(this._gender, this._nationality);
+        this._surname = params && params.surname ? params.surname : surnames[this._nationality][~~(Math.random() * surnames[this._nationality].length)];
         this._family_id = params && params.familyID ? params.familyID : 0;
         this._relationShips = [];
         this._age = params && params.age ? params.age : ~~(Math.random() * 100);
@@ -67,8 +78,9 @@ export class Person {
         return `${this._firstName} ${this._surname}`;
     }
 
-    private static getName(gender: string): string {
-        return gender === "female" ? femaleNames[~~(Math.random() * femaleNames.length)] : maleNames[~~(Math.random() * maleNames.length)];
+    private static getName(gender: string, country: string): string {
+
+        return gender === "female" ? femaleNames[country][~~(Math.random() * femaleNames[country].length)] : maleNames[country][~~(Math.random() * maleNames[country].length)];
     }
 
     public newRelationship(person: Person, type?: FamilyRelationshipType, mutual?: boolean) {

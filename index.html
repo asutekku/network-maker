@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Social Generator</title>
+    <title>Network Maker</title>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <link href="style/style.css" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -22,17 +22,24 @@
             </label>-->
             <fieldset>
                 <legend>Singles</legend>
-            <label>Enable
-                <input type="checkbox" name="relType" value="singles" checked>
-            </label>
-            <label>Probability
-                <input id="singleSlider" type="range" name="relType" value="20" min="0" max="100" checked>
-                <span id="singleProbability">20</span>
-            </label>
+                <label>Enable
+                    <input type="checkbox" name="relType" value="singles" id="singlesBox" checked>
+                </label>
+                <label>Probability
+                    <input id="singleSlider" type="range" name="relType" value="20" min="0" max="100" checked>
+                    <span id="singleProbability">20</span>
+                </label>
             </fieldset>
+            <label>Nationality
+                <select id="nationalityChange">
+                    <option value="american">American</option>
+                    <option value="japanese">Japanese</option>
+                    <option value="finnish">Finnish</option>
+                </select>
+            </label>
         </fieldset>
         <fieldset>
-            <legend>Family Parameters </legend>
+            <legend>Family Parameters</legend>
             <label>Min Children
                 <input name="min-children" type="number" value="0" id="minChildren">
             </label>

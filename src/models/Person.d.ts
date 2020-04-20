@@ -5,8 +5,11 @@ interface personParams {
     familyID?: number;
     firstName?: string;
     surname?: string;
+    nationality?: string;
 }
 export declare class Person {
+    get nationality(): string;
+    set nationality(value: string);
     get relationShips(): Relationship[];
     set relationShips(value: Relationship[]);
     set family_id(value: number);
@@ -23,6 +26,7 @@ export declare class Person {
     private _family_id;
     private _age;
     private _relationShips;
+    private _nationality;
     constructor(params?: personParams);
     getFullName(): string;
     private static getName;
