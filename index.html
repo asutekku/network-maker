@@ -11,8 +11,9 @@
     <div class="sidebar">
         <fieldset>
             <legend>General Parameters</legend>
-            <label>Family Count
-                <input name="family-count" type="number" value="10" id="familyCount">
+            <label>Families
+                <input id="familyCountSlider" type="range" name="relType" value="10" min="0" max="50" checked>
+                <span id="familyCountAmount">10</span>
             </label>
             <!--<label>Include Divorces
                 <input type="checkbox" name="relType" value="singles" >
@@ -55,6 +56,12 @@
             <label>Max Relationships / person
                 <input name="max-relationship" type="number" value="2" id="maxRelationship">
             </label>
+            <fieldset>
+                <legend>Finetune relations</legend>
+                Change how often each relation appears.
+                <span id="finetuneSocial">
+                </span>
+            </fieldset>
             <!--<fieldset>
                 <legend>Included Relationships</legend>
                 <label>Knows

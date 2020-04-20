@@ -1,30 +1,29 @@
+export interface RelationshipProps {
+    from: number;
+    to: number;
+    mutual?: boolean;
+    type?: RelationshipType;
+}
 export declare class Relationship {
     private static next_id;
     readonly id: number;
     from: number;
     to: number;
     mutual: boolean;
-    type: FamilyRelationshipType | SocialRelationshipType;
-    constructor(from: number, to: number, type?: FamilyRelationshipType | SocialRelationshipType, mutual?: boolean);
-    private GetRandomType;
+    type: RelationshipType;
+    constructor(props: RelationshipProps);
+    private static GetRandomType;
 }
-export declare enum FamilyRelationshipType {
-    mother = "Mother of",
-    father = "Father of",
-    child = "Child of",
-    divorced = "Divorced",
-    spouse = "Spouse"
+export interface RelationshipType {
+    name: string;
+    id: string;
+    mutual: boolean;
+    type: "family" | "romantic" | "social" | "professional";
+    probability: number;
+    dashed?: boolean;
+    enabled: boolean;
 }
-export declare enum SocialRelationshipType {
-    friends = "Friends",
-    knows = "Knows",
-    likes = "Likes",
-    dislikes = "Dislikes",
-    hates = "Hates",
-    admires = "Admires",
-    bestFriends = "Best Friends",
-    wormates = "Workmates"
-}
+export declare let relationshipTypes: RelationshipType[];
 export declare enum RomanticRelationshipTypes {
     loves = "Loves",
     dates = "Dates",

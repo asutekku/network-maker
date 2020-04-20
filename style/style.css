@@ -1,3 +1,7 @@
+html {
+    font-family: sans-serif;
+}
+
 .app {
     width: 100%;
     display: grid;
@@ -16,7 +20,26 @@
 }
 
 label {
-    display: block;
-    width: 100%;
     margin: 5px 0;
+}
+
+.sliderContainerRow {
+    display:grid;
+    grid-template-columns: 40% 60%;
+}
+
+.sliderContainerRow label {
+    overflow: hidden;
+}
+
+.sliderContainer .valueInput{
+    width:30%;
+}
+
+.sliderContainer .valueSlider{
+    width:60%;
+}
+
+.sliderContainerRow.disabled {
+    color: #9b9b9b;
 }

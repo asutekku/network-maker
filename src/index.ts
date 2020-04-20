@@ -2,7 +2,8 @@ import {Data, DataSet, Edge, Network, Node} from "vis";
 import {PeopleCollection} from "./models/PeopleCollection";
 import {Family} from "./models/Family";
 import {Person} from "./models/Person";
-import {Relationship, FamilyRelationshipType} from "./models/Relationship";
+import {Relationship, RelationshipType, relationshipTypes} from "./models/Relationship";
+import {Relationships} from "./models/Relationships";
 
 class SocialGenerator {
     private static collection = new PeopleCollection();
@@ -30,6 +31,7 @@ class SocialGenerator {
         this.generateRelationships();
         this.createNetwork();
         this.setControls();
+        this.createFineTunes("social");
     }
 
     private static createFamilies(): void {
@@ -39,7 +41,6 @@ class SocialGenerator {
         for (let i = 0; i < this.options.familyCount; i++) {
 
             const FamilyIsSingle = (this.options.singleProbability > Math.random() * 100) && this.options.singles;
-            console.log(FamilyIsSingle);
             let family = new Family();
             if (FamilyIsSingle) {
                 let person = new Person({nationality: this.options.nationality});
@@ -54,7 +55,11 @@ class SocialGenerator {
                     surname: person1.surname,
                     nationality: this.options.nationality
                 });
-                let relationship = new Relationship(person1.id, person2.id, FamilyRelationshipType.spouse, true);
+                let relationship = new Relationship({
+                    from: person1.id,
+                    to: person2.id,
+                    type: relationshipTypes.find(r => r.id === "spouse")
+                });
                 person1.addRelationShip(relationship);
                 relationships.push(relationship);
 
@@ -62,8 +67,16 @@ class SocialGenerator {
                 for (let i = 0; i < childCount; i++) {
                     const age = ~~(Math.random() * 18);
                     let child = new Person({age: age, surname: person1.surname, nationality: this.options.nationality});
-                    let rel1 = new Relationship(person1.id, child.id, FamilyRelationshipType.father, false);
-                    let rel2 = new Relationship(person2.id, child.id, FamilyRelationshipType.mother, false);
+                    let rel1 = new Relationship({
+                        from: person1.id,
+                        to: child.id,
+                        type: relationshipTypes.find(r => r.id === "father"),
+                    });
+                    let rel2 = new Relationship({
+                        from: person2.id,
+                        to: child.id,
+                        type: relationshipTypes.find(r => r.id === "mother"),
+                    });
                     person1.addRelationShip(rel1);
                     person2.addRelationShip(rel2);
                     relationships = [...relationships, rel1, rel2];
@@ -151,8 +164,9 @@ class SocialGenerator {
             let relationShipCount = this.options.minRelationship + Math.round(Math.random() * this.options.maxRelationship);
             for (let i = 0; i < relationShipCount; i++) {
                 let target = this.collection.people.getRandom();
-                if (target.relationShips.length >= this.options.maxRelationship || target.family_id === p.family_id) return;
-                let rel = new Relationship(p.id, target.id);
+                let noRelationships = relationshipTypes.filter((r: RelationshipType) => r.probability !== 0 && r.type === "social").length === 0;
+                if (target.relationShips.length >= this.options.maxRelationship || target.family_id === p.family_id || noRelationships) return;
+                let rel = new Relationship({from: p.id, to: target.id});
                 p.addRelationShip(rel);
                 target.addRelationShip(rel);
                 this.collection.relationships.add(rel);
@@ -175,7 +189,6 @@ class SocialGenerator {
         let GenerateGraph: HTMLButtonElement = <HTMLButtonElement>document.getElementById("generateGraph")!;
         let childrenMin: HTMLInputElement = <HTMLInputElement>document.getElementById("minChildren")!;
         let childrenMax: HTMLInputElement = <HTMLInputElement>document.getElementById("maxChildren")!;
-        let familyCount: HTMLInputElement = <HTMLInputElement>document.getElementById("familyCount")!;
 
         setListener("minRelationship", "input", (e: any) => {
             this.options.minRelationship = e.target.value;
@@ -188,6 +201,11 @@ class SocialGenerator {
         setListener("singleSlider", "input", (e: any) => {
             document.getElementById("singleProbability")!.innerText = e.target.value;
             this.options.singleProbability = e.target.value;
+        });
+
+        setListener("familyCountSlider", "input", (e: any) => {
+            document.getElementById("familyCountAmount")!.innerText = e.target.value;
+            this.options.familyCount = e.target.value;
         });
 
         setListener("singlesBox", "input", (e: any) => {
@@ -211,11 +229,6 @@ class SocialGenerator {
         childrenMin.addEventListener("input", (e: any) => {
             this.options.minChildren = parseInt(e.target.value);
         });
-        familyCount.addEventListener("input", (e: any) => {
-            this.options.familyCount = parseInt(e.target.value);
-        });
-
-
     }
 
     private static clusterByFamily() {
@@ -244,6 +257,79 @@ class SocialGenerator {
             };
             this.network.cluster(clusterOptionsByData);
         }
+    }
+
+    private static createFineTunes(type: string) {
+        const root = document.getElementById("finetuneSocial");
+        let types = relationshipTypes.filter((r: RelationshipType) => r.type === type);
+        types.forEach((r: RelationshipType) => {
+            let label = document.createElement("label");
+            let slider = document.createElement("input");
+            let inputCheck = document.createElement("input");
+            let valueinput = document.createElement('input');
+            let nameContainer = document.createElement('div');
+            let sliderContainer = document.createElement('div');
+            let row = document.createElement('div');
+            row.className = "sliderContainerRow";
+            sliderContainer.className = "sliderContainer";
+            nameContainer.className = "nameContainer";
+
+            let initValue = (r.probability * 100).toString();
+
+            label.textContent = `${r.name}`;
+            slider.type = "range";
+            slider.value = initValue;
+            slider.max = "100";
+            slider.min = "1";
+            slider.className = "valueSlider";
+            let id = r.id;
+            slider.id = id;
+            inputCheck.type = "checkbox";
+            inputCheck.checked = true;
+
+            valueinput.id = r.id + "_value";
+            valueinput.value = initValue;
+            valueinput.className = "valueInput";
+            valueinput.type = "number";
+            valueinput.min = "1";
+            valueinput.max = "100";
+
+            slider.addEventListener("input", (e: any) => {
+                let value = e.target!.value;
+                valueinput.value = value > 100 ? 100 : value < 0 ? 0 : value;
+                let rt = relationshipTypes.find((r: RelationshipType) => r.id == id)!;
+                rt.probability = parseInt(value) / 100;
+            });
+
+            valueinput.addEventListener("input", (e: any) => {
+                let value = e.target!.value;
+                slider.value = value > 100 ? 100 : value <= 1 ? 1 : value;
+                valueinput.value = value > 100 ? 100 : value <= 1 ? 1 : value;
+                let rt = relationshipTypes.find((r: RelationshipType) => r.id == id)!;
+                rt.probability = parseInt(e.target!.value) / 100;
+            });
+
+            inputCheck.addEventListener("input", (e: any) => {
+                let disabled = !e.target.checked;
+                slider.disabled = disabled;
+                valueinput.disabled = disabled;
+                if (disabled){
+                    row.classList.add("disabled");
+                } else {
+                    row.classList.remove("disabled");
+                }
+                let rt = relationshipTypes.find((r: RelationshipType) => r.id == id)!;
+                rt.enabled = !disabled;
+            });
+
+            nameContainer.appendChild(inputCheck);
+            nameContainer.appendChild(label);
+            sliderContainer.appendChild(slider);
+            sliderContainer.appendChild(valueinput);
+            row.appendChild(nameContainer);
+            row.appendChild(sliderContainer);
+            root!.appendChild(row);
+        })
     }
 
     private static neighbourhoodHighlight(params: any) {
@@ -343,9 +429,8 @@ class SocialGenerator {
                 from: r.from,
                 to: r.to,
                 arrows: r.mutual ? "to,from" : "to",
-                label: r.type.toString(),
+                label: r.type.name.toString(),
                 font: {align: "middle"},
-                color: "#2d2d2d"
             }
         })
     }

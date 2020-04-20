@@ -1,4 +1,4 @@
-import { Relationship, FamilyRelationshipType } from "./Relationship";
+import { Relationship, RelationshipType } from "./Relationship";
 interface personParams {
     gender?: "female" | "male" | "unspecified";
     age?: number;
@@ -30,7 +30,7 @@ export declare class Person {
     constructor(params?: personParams);
     getFullName(): string;
     private static getName;
-    newRelationship(person: Person, type?: FamilyRelationshipType, mutual?: boolean): void;
+    newRelationship(person: Person, type?: RelationshipType, mutual?: boolean): void;
     addRelationShip(relationship: Relationship): void;
 }
 export {};
