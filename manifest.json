@@ -1,0 +1,9 @@
+{
+  "short_name": "Network Maker",
+  "name": "Create Fictional Relationship Networks | Network Maker",
+  "start_url": "/",
+  "background_color": "#4d71ff",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#4d71ff"
+}

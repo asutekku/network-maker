@@ -8,9 +8,17 @@ interface personParams {
     firstName?: string;
     surname?: string;
     nationality?: string;
+    country?: string;
 }
 
 export class Person {
+    get country(): string {
+        return this._country;
+    }
+
+    set country(value: string) {
+        this._country = value;
+    }
     get nationality(): string {
         return this._nationality;
     }
@@ -61,16 +69,19 @@ export class Person {
     private _age: number;
     private _relationShips: Relationship[];
     private _nationality: string;
+    private _country: string;
 
     constructor(params?: personParams) {
         this._nationality = params && params.nationality ? params.nationality : "american";
         this._gender = params && params.gender ? params.gender : (Math.random() < 0.5) ? 'male' : 'female';
+        console.log(this._nationality);
         this._firstName = params && params.firstName ? params.firstName : Person.getName(this._gender, this._nationality);
         this._surname = params && params.surname ? params.surname : surnames[this._nationality][~~(Math.random() * surnames[this._nationality].length)];
         this._family_id = params && params.familyID ? params.familyID : 0;
         this._relationShips = [];
         this._age = params && params.age ? params.age : ~~(Math.random() * 100);
         this.id = Person.next_id;
+        this._country = params && params.country ? params.country : 'united states';
         Person.next_id++;
     }
 

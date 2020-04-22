@@ -4,8 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "./node_modules/.bin/webpack",
-    "start": "node server.js"
+    "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
+    "clean-dist": "rm -f -r -d dist/js",
+    "lint": "tslint 'src/**/*.ts*' --format stylish --force",
+    "start": "node server.js",
+    "start-dev": "webpack-dev-server --config=configs/webpack/dev.js",
+    "start-prod": "yarn run build && node express.js",
+    "test": "jest --watch --coverage --config=configs/jest.json"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",
@@ -13,16 +18,44 @@
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.8.3",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "@types/react-onclickoutside": "^6.7.3",
+    "awesome-typescript-loader": "^5.2.1",
+    "html-webpack-plugin": "^4.2.0",
     "typescript": "^3.7.5",
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.8",
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/react-fontawesome": "^0.1.9",
+    "@types/lodash": "^4.14.150",
+    "@types/uuid": "^7.0.2",
     "@types/vis": "^4.21.19",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.2",
     "express": "^4.17.1",
     "express-favicon": "^2.0.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "lodash": "^4.17.15",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.13.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-graph-vis": "^1.0.5",
+    "react-hot-loader": "^4.12.20",
+    "react-onclickoutside": "^6.9.0",
+    "react-router-dom": "^5.1.2",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.4",
     "ts-loader": "^7.0.1",
+    "uuid": "^7.0.3",
     "vis": "^4.21.0-EOL",
     "vis-network": "^7.6.1",
-    "webpack": "^4.42.1"
+    "webpack": "^4.42.1",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
   }
 }

@@ -1,0 +1,199 @@
+$main-color: #e29c4b;
+$minor-color: #5b5b5b;
+$dark-main: #2C2C33;
+$dark-secondary: #313131;
+$text-light: #CFCFCF;
+$text-dark: #000000de;
+$shadow: 0 1px 1px 0 rgba(60, 64, 67, .08), 0 1px 3px 1px rgba(60, 64, 67, .16);
+
+$background-behind: #222222;
+$background-main: #3E3E3E;
+$background-main-hover: #494949;
+$background-header: #303030;
+$background-header-hover: #202020;
+$background-strong: #1C1C1C;
+$background-strong-hover: #2F2F2F;
+$background-strong-selected: #898989;
+
+$input-disabled: #828282;
+$input-disabled-text: #353535;
+
+$background-active: #D8D8D8;
+$background-inactive: #939393;
+
+$text-inactive: #353535;
+$text-disabled: #7D7D7D;
+
+$padding-input: 3px;
+
+
+html {
+  font-family: sans-serif;
+  background: $background-behind;
+  color: $text-light;
+}
+
+#root {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 300px auto 300px;
+  grid-template-rows: auto;
+  height: 100%;
+}
+
+.sidebar {
+  float: left;
+}
+
+#socialNetwork {
+  float: left;
+  border: 1px solid lightgray;
+}
+
+.group-container {
+  background: $background-main;
+  border: none;
+
+  .group-title {
+    font-weight: 600;
+    height: 32px;
+    line-height: 32px;
+    padding-left: $padding-input*2;
+    background: $background-header;
+    cursor: pointer;
+
+    &:hover {
+      background: $background-header-hover;
+    }
+  }
+
+  .rows {
+    display: grid;
+    grid-template-rows: auto;
+    padding: 0 0 8px 0;
+    user-select: none;
+  }
+}
+
+.paramContainer {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  align-items: center;
+  padding:5px 0;
+
+  &:hover {
+    background: $background-main-hover;
+  }
+
+  .dd-wrapper {
+    width: auto;
+  }
+
+  .cell {
+    padding: 0 4px;
+  }
+
+  .dd-wrapper > .dd-list {
+    position: absolute;
+    width: 160px;
+  }
+
+  .dd-header {
+    background: $background-active;
+    color: $text-dark;
+    border-radius: 3px;
+    padding: $padding-input 2*$padding-input;
+    text-transform: capitalize;
+    cursor: pointer;
+
+    svg {
+      float: right;
+    }
+
+    .dd-header-title {
+      width: auto;
+      display: inline;
+    }
+  }
+
+  .input {
+    background: $background-active;
+  }
+
+  .dd-list {
+    padding: 0;
+    margin: 0;
+    background: $background-strong;
+
+
+    li {
+      display: block;
+      text-transform: capitalize;
+      padding: $padding-input $padding-input $padding-input 2*$padding-input;
+      cursor: pointer;
+
+      &:hover {
+        background: $background-strong-hover;
+      }
+
+    }
+
+    .selected {
+      background: $background-strong-selected;
+      color: $text-dark;
+
+      &:hover {
+        background: $background-strong-selected;
+      }
+    }
+  }
+
+  &.disabled {
+    .dd-header {
+      background: $input-disabled;
+      color: $input-disabled-text;
+    }
+    .nameContainer{
+      color:$text-disabled
+    }
+  }
+}
+
+.inputContainer {
+  input[type="range"] {
+    background: $background-active;
+    width: 60%;
+  }
+
+  input[type="number"] {
+    border-radius: 3px;
+    border: none;
+    height: 24px;
+    padding-left: $padding-input;
+
+    &:disabled {
+      background: $input-disabled;
+      color: $input-disabled-text;
+    }
+  }
+}
+
+.inputContainerRow label {
+  overflow: hidden;
+}
+
+.inputContainer .valueInput {
+  width: 30%;
+}
+
+.inputContainer .valueinput {
+  width: 60%;
+}
+
+.inputContainerRow.disabled {
+  color: #9b9b9b;
+}
+
+.hidden{
+  display: none!important;
+}

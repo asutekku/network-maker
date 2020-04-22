@@ -3,6 +3,7 @@ import {Person} from "./Person";
 export class Family {
     public readonly id: number;
     private members: number[];
+    name: string;
 
     private static next_id: number = 0;
 
@@ -10,9 +11,11 @@ export class Family {
         this.members = [];
         this.id = Family.next_id;
         Family.next_id++;
+        this.name = "";
     }
 
     public add(person: Person): void {
+        if (this.members.length === 0) this.name = person.surname;
         this.members.push(person.id);
         person.family_id = this.id;
     }
@@ -23,8 +26,7 @@ export class Family {
 
     public addMultiple(people: Person[]): void {
         people.forEach((p: Person) => {
-            this.members.push(p.id);
-            p.family_id = this.id;
+            this.add(p);
         });
     }
 

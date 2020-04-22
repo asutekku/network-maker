@@ -15,8 +15,8 @@ export class Families {
         this.families.push(family);
     }
 
-    public getFamilyByID(id: number) {
-        this.families.find((f: Family) => f.id === id)
+    public getFamilyByID(id: number): Family | undefined {
+        return this.families.find((f: Family) => f.id === id);
     }
 
     public all(): Family[] {

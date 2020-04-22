@@ -4,7 +4,7 @@ export declare class Families {
     count(): number;
     constructor();
     add(family: Family): void;
-    getFamilyByID(id: number): void;
+    getFamilyByID(id: number): Family | undefined;
     all(): Family[];
     clear(): void;
 }
