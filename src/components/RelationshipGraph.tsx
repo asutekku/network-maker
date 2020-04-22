@@ -44,10 +44,10 @@ export class Graph extends Component<GraphProps, GraphState> {
 
     componentDidMount() {
         // @ts-ignore
-        this.edges = new vis.DataSet();
+        this.edges = new DataSet();
         this.edges.add(this.props.graph.edges);
         // @ts-ignore
-        this.nodes = new vis.DataSet();
+        this.nodes = new DataSet();
         this.nodes.add(this.props.graph.nodes);
         this.updateGraph();
     }
@@ -211,7 +211,7 @@ export class Graph extends Component<GraphProps, GraphState> {
         let options = defaultsDeep(defaultOptions, this.props.options);
 
         // @ts-ignore
-        this.Network = new vis.Network(
+        this.Network = new Network(
             // @ts-ignore
             this.container.current,
             Object.assign({}, this.props.graph, {

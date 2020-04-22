@@ -1,5 +1,5 @@
 {
-  "name": "SocialGenerator",
+  "name": "network-maker",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,7 +10,6 @@
     "start": "node server.js",
     "start-dev": "webpack-dev-server --config=configs/webpack/dev.js",
     "start-prod": "npm run build && node express.js",
-    "test": "jest --watch --coverage --config=configs/jest.json"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",
