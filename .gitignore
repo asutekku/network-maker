@@ -5,3 +5,4 @@ lib
 yarn.lock
 yarn-error.log
 .gitignore
+.idea
