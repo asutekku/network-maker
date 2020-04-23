@@ -20,11 +20,12 @@ export class PersonBio {
     public getIntroduction(): string {
         let p = this.person;
         let name = p.getFullName();
-        let gender:string = p.gender;
-        let nationality = this.titleCase(this.person.nationality);
+        let gender: string = p.gender;
+        let nationality = this.person.nationality;
 
-        return `${name} is a ${gender} of a ${nationality} nationality. 
-        ${this.titleCase(this.pro)} ${p.gender === 'male' || 'female' ? 'lives':'live'} in ${this.titleCase(this.person.country)}.`
+        return `${name} is ${p.age} years old ${nationality} ${gender} and  
+        ${this.pro} ${p.gender === 'male' || 'female' ? 'lives' : 'live'} in ${this.titleCase(this.person.country)}.
+        There ${this.family.getMembers().length > 1 ? `are ${this.family.getMembers().length} people` : 'is only one person'} in ${this.poss} family.`
     }
 
 
@@ -34,6 +35,11 @@ export class PersonBio {
             splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
         }
         return splitStr.join(' ');
+    }
+
+    getArticle(str: string): string {
+        let vow = 'aeiou';
+        return (vow.includes(str[0])) ? 'an' : 'a';
     }
 
 }

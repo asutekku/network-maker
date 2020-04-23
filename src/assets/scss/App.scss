@@ -1,44 +1,62 @@
 $main-color: #e29c4b;
-$minor-color: #5b5b5b;
-$dark-main: #2C2C33;
-$dark-secondary: #313131;
-$text-light: #CFCFCF;
-$text-dark: #000000de;
-$shadow: 0 1px 1px 0 rgba(60, 64, 67, .08), 0 1px 3px 1px rgba(60, 64, 67, .16);
+$main-color-dark: #9c6c34;
 
-$background-behind: #222222;
-$background-main: #3E3E3E;
-$background-main-hover: #494949;
-$background-header: #303030;
-$background-header-hover: #202020;
-$background-strong: #1C1C1C;
-$background-strong-hover: #2F2F2F;
-$background-strong-selected: #898989;
+$text-color-normal: #000000de;
+$text-color-light: #CFCFCF;
 
-$input-disabled: #828282;
-$input-disabled-text: #353535;
+$background-dark: #222222;
+$background-dark-hover: #3d3d3d;
 
-$background-active: #D8D8D8;
-$background-inactive: #939393;
+$background-light: #ffffff;
+$background-light-hover: #f4f4f4;
 
-$text-inactive: #353535;
-$text-disabled: #7D7D7D;
+$border-light: #D1D5DA;
+$border-dark: #535557;
+
+$header-light: #F6F8FA;
+$header-dark: #303030;
+$header-hover-light: #e1e3e5;
+$header-hover-dark: #202020;
+
+$input-light: #e4e4e4;
+$input-dark: #505050;
+
+$input-disabled-light: #b1b1b1;
+$input-disabled-dark: #828282;
+$input-disabled-text-light: #676767;
+$input-disabled-text-dark: #353535;
 
 $padding-input: 3px;
 
+$themes: (
+        default:(
+                background:$background-light
+        ),
+        dark:(
+                background:$background-dark
+        )
+);
 
-html {
-  font-family: sans-serif;
-  background: $background-behind;
-  color: $text-light;
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
 }
 
-#root {
-  width: 100%;
+body {
+  font-family: sans-serif;
+  background: $background-light;
+  color: $text-color-normal;
+  @include dark-mode {
+    background: $background-dark;
+    color: $text-color-light;
+  }
+}
+
+.content {
   display: grid;
-  grid-template-columns: 300px auto 300px;
+  grid-template-columns: 300px auto;
   grid-template-rows: auto;
-  height: 100%;
 }
 
 .sidebar {
@@ -47,23 +65,36 @@ html {
 
 #socialNetwork {
   float: left;
-  border: 1px solid lightgray;
 }
 
 .group-container {
-  background: $background-main;
-  border: none;
+  background: $background-light;
+  border: 1px solid $border-light;
+  @include dark-mode {
+    background: $background-dark;
+    border-color: $border-dark;
+  }
+  border-radius: 3px;
+  margin-bottom: 3px;
 
   .group-title {
     font-weight: 600;
     height: 32px;
     line-height: 32px;
     padding-left: $padding-input*2;
-    background: $background-header;
+    background: $header-light;
+    border-bottom: 1px solid $border-light;
+    @include dark-mode {
+      background: $header-dark;
+      border-bottom: 1px solid $border-dark;
+    }
     cursor: pointer;
 
     &:hover {
-      background: $background-header-hover;
+      background: $header-hover-light;
+      @include dark-mode {
+        background: $header-hover-dark;
+      }
     }
   }
 
@@ -79,10 +110,13 @@ html {
   display: grid;
   grid-template-columns: 40% 60%;
   align-items: center;
-  padding:5px 0;
+  padding: 5px 0;
 
   &:hover {
-    background: $background-main-hover;
+    background: $background-light-hover;
+    @include dark-mode {
+      background: $background-dark-hover;
+    }
   }
 
   .dd-wrapper {
@@ -99,8 +133,12 @@ html {
   }
 
   .dd-header {
-    background: $background-active;
-    color: $text-dark;
+    background: $input-light;
+    color: $text-color-normal;
+    @include dark-mode {
+      background: $input-dark;
+      color: $text-color-light;
+    }
     border-radius: 3px;
     padding: $padding-input 2*$padding-input;
     text-transform: capitalize;
@@ -117,13 +155,24 @@ html {
   }
 
   .input {
-    background: $background-active;
+    background: $input-light;
+    @include dark-mode {
+      background: $input-dark;
+      color: $text-color-light;
+    }
   }
 
   .dd-list {
     padding: 0;
     margin: 0;
-    background: $background-strong;
+    background: $header-light;
+    border: 1px solid $border-light;
+    @include dark-mode {
+      background: $header-dark;
+      color: $text-color-light;
+      border-color: $border-dark;
+    }
+    z-index: 20;
 
 
     li {
@@ -133,67 +182,114 @@ html {
       cursor: pointer;
 
       &:hover {
-        background: $background-strong-hover;
+        background: $header-hover-light;
+        @include dark-mode {
+          background: $header-hover-dark;
+          color: $text-color-light;
+        }
       }
-
     }
 
     .selected {
-      background: $background-strong-selected;
-      color: $text-dark;
+      background: $main-color;
+      color: $text-color-normal;
+      border-left: 3px solid $main-color-dark;
+      padding-left: 3px;
 
       &:hover {
-        background: $background-strong-selected;
+        background: $header-hover-light;
+        @include dark-mode {
+          background: $header-hover-dark;
+          color: $text-color-light;
+        }
       }
     }
   }
 
   &.disabled {
     .dd-header {
-      background: $input-disabled;
-      color: $input-disabled-text;
+      background: $input-disabled-light;
+      color: $input-disabled-text-light;
+      @include dark-mode {
+        background: $input-disabled-dark;
+        color: $input-disabled-text-dark;
+      }
     }
-    .nameContainer{
-      color:$text-disabled
-    }
-  }
-}
 
-.inputContainer {
-  input[type="range"] {
-    background: $background-active;
-    width: 60%;
-  }
-
-  input[type="number"] {
-    border-radius: 3px;
-    border: none;
-    height: 24px;
-    padding-left: $padding-input;
-
-    &:disabled {
-      background: $input-disabled;
-      color: $input-disabled-text;
+    .nameContainer {
+      color: $input-disabled-text-light;
+      @include dark-mode {
+        color: $input-disabled-text-light;
+      }
     }
   }
 }
 
-.inputContainerRow label {
-  overflow: hidden;
+.hidden {
+  display: none !important;
 }
 
-.inputContainer .valueInput {
-  width: 30%;
+.bio-container {
+  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: $background-light;
+  border: 1px solid $border-light;
+  @include dark-mode {
+    background: $background-dark;
+    border-color: $border-dark;
+  }
+  width: 20%;
+  margin: 10px;
+  height: auto;
 }
 
-.inputContainer .valueinput {
-  width: 60%;
+.horizontal-slider {
+  height: 24px;
+  border-radius: 3px;
+  line-height: 24px;
+  text-align: center;
+
+  &.disabled {
+
+    @include dark-mode {
+
+    }
+
+    .slider-track {
+      background: $input-disabled-light;
+      @include dark-mode {
+        background: $input-disabled-dark;
+      }
+    }
+
+    .slider-thumb {
+      background: $input-disabled-dark;
+      color: $input-disabled-text-dark;
+      @include dark-mode {
+        color: $input-disabled-text-light;
+        background: $input-disabled-light;
+      }
+    }
+  }
 }
 
-.inputContainerRow.disabled {
-  color: #9b9b9b;
+.slider-track {
+  background: $input-light;
+  @include dark-mode {
+    background: $input-dark;
+  }
+  height: 100%;
+  border-radius: 3px;
 }
 
-.hidden{
-  display: none!important;
+.slider-thumb {
+  background: $main-color;
+  color: $text-color-normal;
+  box-sizing: border-box;
+  font-weight: 600;
+  height: 100%;
+  width: 32px;
+  border-radius: 5px;
 }

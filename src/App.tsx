@@ -10,6 +10,7 @@ import {Person} from "./models/Person";
 import {DataGroup, DataItem, DataSet, Edge, Network, Node} from "vis";
 import Dropdown from "./components/Dropdown";
 import PersonInfo from "./components/PersonInfo";
+import ReactSlider from "react-slider";
 
 export interface AppProps {
 
@@ -24,8 +25,7 @@ interface AppState {
 
 interface AppOptions {
     familyCount: number,
-    minChildren: number,
-    maxChildren: number,
+    children: number[],
     minRelationship: number,
     maxRelationship: number,
     singleProbability: number,
@@ -49,8 +49,7 @@ export default class App extends React.Component<AppProps, AppState> {
     collection: PeopleCollection = new PeopleCollection();
     options: AppOptions = {
         familyCount: 10,
-        minChildren: 0,
-        maxChildren: 3,
+        children: [0, 3],
         minRelationship: 0,
         maxRelationship: 2,
         singleProbability: 20,
@@ -101,23 +100,28 @@ export default class App extends React.Component<AppProps, AppState> {
 
             const FamilyIsSingle = (this.options.singleProbability > Math.random() * 100) && this.options.singles;
             let family = new Family();
+            let parentAge = 18 + ~~(Math.random() * 60);
             if (FamilyIsSingle) {
                 let person = new Person({nationality: nationality, country: country});
                 family.add(person);
                 this.collection.people.add(person);
             } else {
+
+                let spouseAge = parentAge + (-5 + ~~(Math.random() * 10));
                 let children: Person[] = [];
                 let relationships: Relationship[] = [];
                 let person1 = new Person({
                     gender: "male",
                     nationality: nationality,
-                    country: country
+                    country: country,
+                    age: parentAge
                 });
                 let person2 = new Person({
                     gender: "female",
                     surname: person1.surname,
                     nationality: nationality,
-                    country: country
+                    country: country,
+                    age: spouseAge
                 });
                 let relationship = new Relationship({
                     from: person1.id,
@@ -127,9 +131,9 @@ export default class App extends React.Component<AppProps, AppState> {
                 person1.addRelationShip(relationship);
                 relationships.push(relationship);
 
-                const childCount = this.options.minChildren + Math.round(Math.random() * this.options.maxChildren);
+                const childCount = this.options.children[0] + Math.round(Math.random() * this.options.children[1]);
                 for (let i = 0; i < childCount; i++) {
-                    const age = ~~(Math.random() * 18);
+                    const age = ~~(Math.random() * (parentAge - 16));
                     let child = new Person({
                         age: age,
                         surname: person1.surname,
@@ -211,24 +215,15 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
 
-    updateFamilyCount = (e: string): any => this.options.familyCount = parseInt(e);
-    updateMinChild = (e: string): any => {
-        let val: number = parseInt(e);
-        if (this.options.maxChildren <= val) {
-            this.options.maxChildren = val;
-        }
-        this.options.minChildren = val;
+    updateFamilyCount = (e: number): any => this.options.familyCount = e;
+    updateChildren = (e: number[]): any => {
+        this.options.children = e;
     };
-    updateMaxChild = (e: string): any => {
-        let val: number = parseInt(e);
-        if (this.options.minChildren >= val) {
-            this.options.minChildren = val;
-        }
-        this.options.maxChildren = val;
+    updateRelationships = (e: number[]): any => {
+        this.options.minRelationship = e[0];
+        this.options.maxRelationship = e[1];
     };
-    updateMinRel = (e: string): any => this.options.minRelationship = parseInt(e);
-    updateMaxRel = (e: string): any => this.options.maxRelationship = parseInt(e);
-    updateSingles = (e: string): any => this.options.singleProbability = parseInt(e);
+    updateSingles = (e: number): any => this.options.singleProbability = e;
     updateNationalities = (e: string[]): any => {
         this.options.nationalities = e;
     };
@@ -245,8 +240,8 @@ export default class App extends React.Component<AppProps, AppState> {
 
 
     render() {
-        return (
-            <>
+        return <>
+            <div className={'content'}>
                 <div className={"sidebar"}>
                     <ParameterGroup name={"General Parameters"}>
                         <Slider name={"Families"} min={1} max={50} identifier={"families"} active={true}
@@ -262,16 +257,14 @@ export default class App extends React.Component<AppProps, AppState> {
                                   getValue={this.updateCountries}/>
                     </ParameterGroup>
                     <ParameterGroup name={"Family Parameters"}>
-                        <Slider name={"Children Min"} min={1} max={10} identifier={"minChildren"} active={true}
-                                value={this.options.minChildren} onChange={this.updateMinChild}/>
-                        <Slider name={"Children Max"} min={1} max={10} identifier={"maxChildren"} active={true}
-                                value={this.options.maxChildren} onChange={this.updateMaxChild.bind(this)}/>
+                        <Slider name={"Children"} min={0} max={10} identifier={"minChildren"} active={true}
+                                value={[this.options.children[0], this.options.children[1]]}
+                                onChange={this.updateChildren}/>
                     </ParameterGroup>
                     <ParameterGroup name={"Relationship Parameters"}>
-                        <Slider name={"Relationships Min"} min={1} max={10} identifier={"minRelationships"}
-                                active={true} value={this.options.minRelationship} onChange={this.updateMinRel}/>
-                        <Slider name={"Relationships Max"} min={1} max={10} identifier={"maxRelationships"}
-                                active={true} value={this.options.maxRelationship} onChange={this.updateMaxRel}/>
+                        <Slider name={"Relationships"} min={1} max={10} identifier={"minRelationships"}
+                                active={true} value={[this.options.minRelationship, this.options.maxRelationship]}
+                                onChange={this.updateRelationships}/>
                         <ParameterGroup name={"Finetune relations"}>
                             {relationshipTypes.filter((r: RelationshipType) => r.type === "social").map((r: RelationshipType) => {
                                 return <Slider name={r.name} min={1} max={100} identifier={r.id} active={false}
@@ -313,10 +306,10 @@ export default class App extends React.Component<AppProps, AppState> {
                                },
                            }, physics: false,
                        }} events={{"click": this.getPerson}}/>}
-                <div className={"sidebar"}>
-                    <PersonInfo person={this.state.selected} collection={this.collection}/>
-                </div>
-            </>
-        );
+            </div>
+            <div className={`sidebar bio-container ${this.state.selected !== undefined ? '' : 'hidden'}`}>
+                <PersonInfo person={this.state.selected} collection={this.collection}/>
+            </div>
+        </>;
     }
 }

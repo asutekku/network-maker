@@ -1,19 +1,20 @@
 import React from 'react';
 import ParameterRow from "./ParameterRow";
+import ReactSlider from "react-slider";
 
 export interface SliderProps {
     name: string;
     min: number;
     max: number;
-    value: number;
+    value: number | number[];
     identifier: string;
     active: boolean;
-    onChange: (a: string) => {}
+    onChange: (a: any) => void
 }
 
 interface SliderState {
     active: boolean;
-    value: number;
+    value: number | number[];
 }
 
 class Slider extends React.Component<SliderProps, SliderState> {
@@ -28,7 +29,7 @@ class Slider extends React.Component<SliderProps, SliderState> {
     };
 
     sliderOnChange = (e: any) => {
-        let val = e.target.value, max = this.props.max, min = this.props.min;
+        let val = e, max = this.props.max, min = this.props.min;
         let value = val > max ? max : val < min ? min : val;
         this.setState({value: val});
         this.props.onChange(val);
@@ -38,12 +39,19 @@ class Slider extends React.Component<SliderProps, SliderState> {
         return (
             <ParameterRow name={this.props.name} onCheckboxClick={this.check} active={this.state.active}
                           initialActive={this.state.active}>
-                <input type={"range"} max={this.props.max} min={this.props.min} className={"valueSlider"}
-                       id={this.props.identifier} disabled={!this.state.active} value={this.state.value}
-                       onChange={this.sliderOnChange}/>
-                <input type={"number"} max={this.props.max} min={this.props.min} className={"valueInput"}
-                       id={`${this.props.identifier}_value`} disabled={!this.state.active}
-                       value={this.state.value} onChange={this.sliderOnChange}/>
+                <ReactSlider className={'horizontal-slider'}
+                             thumbClassName="slider-thumb"
+                             trackClassName="slider-track"
+                             renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+                             max={this.props.max}
+                             min={this.props.min}
+                             value={this.state.value}
+                             ariaValuetext={state => `Thumb value ${state.valueNow}`}
+                             onChange={this.sliderOnChange}
+                             disabled={!this.state.active}
+                             pearling
+                             minDistance={0}
+                />
             </ParameterRow>
         );
     }
