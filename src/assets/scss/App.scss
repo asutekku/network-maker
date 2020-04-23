@@ -1,5 +1,6 @@
-$main-color: #e29c4b;
-$main-color-dark: #9c6c34;
+$main-color: #C70039;
+$main-color-dark: #900C3F;
+$main-color-dark-disabled: #511845;
 
 $text-color-normal: #000000de;
 $text-color-light: #CFCFCF;
@@ -252,11 +253,6 @@ body {
   text-align: center;
 
   &.disabled {
-
-    @include dark-mode {
-
-    }
-
     .slider-track {
       background: $input-disabled-light;
       @include dark-mode {
@@ -273,6 +269,37 @@ body {
       }
     }
   }
+
+  &.multi {
+    .slider-track-1 {
+      background: $main-color-dark;
+      border-radius: 5px;
+    }
+  }
+  &.single.disabled {
+    .slider-track-0 {
+      background: $input-disabled-text-light;
+      @include dark-mode {
+        background: $input-dark;
+      }
+    }
+  }
+
+
+  &.single {
+    .slider-track-0 {
+      background: $main-color-dark;
+      border-radius: 5px;
+    }
+  }
+  &.multi.disabled {
+    .slider-track-1 {
+      background: $input-disabled-text-light;
+      @include dark-mode {
+        background: $input-dark;
+      }
+    }
+  }
 }
 
 .slider-track {
@@ -283,6 +310,7 @@ body {
   height: 100%;
   border-radius: 3px;
 }
+
 
 .slider-thumb {
   background: $main-color;

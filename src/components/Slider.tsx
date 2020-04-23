@@ -39,7 +39,7 @@ class Slider extends React.Component<SliderProps, SliderState> {
         return (
             <ParameterRow name={this.props.name} onCheckboxClick={this.check} active={this.state.active}
                           initialActive={this.state.active}>
-                <ReactSlider className={'horizontal-slider'}
+                <ReactSlider className={`horizontal-slider ${Array.isArray(this.state.value) ? 'multi' : 'single'}`}
                              thumbClassName="slider-thumb"
                              trackClassName="slider-track"
                              renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
