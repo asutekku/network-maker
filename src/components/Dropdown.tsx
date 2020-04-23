@@ -26,7 +26,7 @@ class Dropdown extends React.Component<DropdownProps, DropdownState> {
         this.state = {
             listOpen: false,
             active: true,
-            selected: [this.props.list[0]]
+            selected: [this.props.list[0].toLowerCase()]
         };
         // @ts-ignore
         fontawesome.library.add(faAngleUp, faAngleDown);
@@ -77,7 +77,7 @@ class Dropdown extends React.Component<DropdownProps, DropdownState> {
                     </div>
                     {listOpen && <ul className="dd-list">
                         {list.map((item: string) => (
-                            <li className={`dd-list-item ${this.state.selected.includes(item) ? 'selected' : ''}`}
+                            <li className={`dd-list-item ${this.state.selected.map((s:string)=>s.toLowerCase()).includes(item) ? 'selected' : ''}`}
                                 key={item.toLowerCase()} data-key={item.toLowerCase()}
                                 onClick={this.setActive}>{item}</li>
                         ))}
