@@ -29,6 +29,8 @@ $input-disabled-text-dark: #353535;
 
 $padding-input: 3px;
 
+$cell-height: 20px;
+
 $themes: (
         default:(
                 background:$background-light
@@ -102,7 +104,7 @@ body {
   .rows {
     display: grid;
     grid-template-rows: auto;
-    padding: 0 0 8px 0;
+    padding: 8px 0 8px 0;
     user-select: none;
   }
 }
@@ -122,10 +124,6 @@ body {
 
   .dd-wrapper {
     width: auto;
-  }
-
-  .cell {
-    padding: 0 4px;
   }
 
   .dd-wrapper > .dd-list {
@@ -193,14 +191,14 @@ body {
 
     .selected {
       background: $main-color;
-      color: $text-color-normal;
+      color: $text-color-light;
       border-left: 3px solid $main-color-dark;
       padding-left: 3px;
 
       &:hover {
-        background: $header-hover-light;
+        background: $main-color-dark;
         @include dark-mode {
-          background: $header-hover-dark;
+          background: $main-color-dark;
           color: $text-color-light;
         }
       }
@@ -244,12 +242,17 @@ body {
   width: 20%;
   margin: 10px;
   height: auto;
+
+  p {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 
 .horizontal-slider {
-  height: 24px;
+  height: $cell-height;
   border-radius: 3px;
-  line-height: 24px;
+  line-height: $cell-height;
   text-align: center;
 
   &.disabled {
@@ -276,6 +279,7 @@ body {
       border-radius: 5px;
     }
   }
+
   &.single.disabled {
     .slider-track-0 {
       background: $input-disabled-text-light;
@@ -292,6 +296,7 @@ body {
       border-radius: 5px;
     }
   }
+
   &.multi.disabled {
     .slider-track-1 {
       background: $input-disabled-text-light;
@@ -309,6 +314,40 @@ body {
   }
   height: 100%;
   border-radius: 3px;
+}
+
+.row {
+  padding: 4px;
+
+  &.columns-2 {
+    display: grid;
+    grid-template-columns: 25% auto;
+    grid-template-rows: auto;
+  }
+
+  .capitalize {
+    text-transform: capitalize;
+  }
+
+  &.dense {
+    padding: 2px 4px
+  }
+
+  .cell {
+    &.bold {
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    &.major {
+    }
+
+    .link {
+      color: $main-color;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
 }
 
 

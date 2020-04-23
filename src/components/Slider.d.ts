@@ -3,14 +3,14 @@ export interface SliderProps {
     name: string;
     min: number;
     max: number;
-    value: number;
+    value: number | number[];
     identifier: string;
     active: boolean;
-    onChange: (a: string) => {};
+    onChange: (a: any) => void;
 }
 interface SliderState {
     active: boolean;
-    value: number;
+    value: number | number[];
 }
 declare class Slider extends React.Component<SliderProps, SliderState> {
     constructor(props: SliderProps);

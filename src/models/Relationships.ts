@@ -19,6 +19,18 @@ export class Relationships {
         return this.relationShips;
     }
 
+    public getFromById(id: number): Relationship[] {
+        return this.relationShips.filter((r: Relationship) => r.from === id)
+    }
+
+    public getToById(id: number): Relationship[] {
+        return this.relationShips.filter((r: Relationship) => r.to === id)
+    }
+
+    public getAllById(id: number): Relationship[] {
+        return this.relationShips.filter((r: Relationship) => r.to === id || r.from === id)
+    }
+
     public clear(): void {
         this.relationShips = [];
     }

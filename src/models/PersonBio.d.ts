@@ -9,5 +9,6 @@ export declare class PersonBio {
     constructor(person: Person, collection: PeopleCollection);
     getIntroduction(): string;
     titleCase(str: string): string;
+    getArticle(str: string): string;
 }
 export default PersonBio;

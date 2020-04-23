@@ -23,9 +23,9 @@ export class PersonBio {
         let gender: string = p.gender;
         let nationality = this.person.nationality;
 
-        return `${name} is ${p.age} years old ${nationality} ${gender} and  
-        ${this.pro} ${p.gender === 'male' || 'female' ? 'lives' : 'live'} in ${this.titleCase(this.person.country)}.
-        There ${this.family.getMembers().length > 1 ? `are ${this.family.getMembers().length} people` : 'is only one person'} in ${this.poss} family.`
+        return `${name} is ${p.age} years old ${nationality} ${gender} who  
+        ${p.gender === 'male' || 'female' ? 'lives' : 'live'} in ${this.titleCase(this.person.country)}.
+        ${this.family.getMembers().length > 1 ? `There are ${this.family.getMembers().length} people in ${this.poss} family.` : `${this.titleCase(this.pro)} is living on ${this.poss} own.`} `
     }
 
 

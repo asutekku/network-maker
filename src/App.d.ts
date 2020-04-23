@@ -13,8 +13,7 @@ interface AppState {
 }
 interface AppOptions {
     familyCount: number;
-    minChildren: number;
-    maxChildren: number;
+    children: number[];
     minRelationship: number;
     maxRelationship: number;
     singleProbability: number;
@@ -37,12 +36,10 @@ export default class App extends React.Component<AppProps, AppState> {
     updateData(): void;
     createData(): Promise<void>;
     componentDidUpdate(prevProps: Readonly<AppProps>, prevState: Readonly<AppState>, snapshot?: any): void;
-    updateFamilyCount: (e: string) => any;
-    updateMinChild: (e: string) => any;
-    updateMaxChild: (e: string) => any;
-    updateMinRel: (e: string) => any;
-    updateMaxRel: (e: string) => any;
-    updateSingles: (e: string) => any;
+    updateFamilyCount: (e: number) => any;
+    updateChildren: (e: number[]) => any;
+    updateRelationships: (e: number[]) => any;
+    updateSingles: (e: number) => any;
     updateNationalities: (e: string[]) => any;
     updateCountries: (e: string[]) => any;
     getPerson: (e: any) => void;

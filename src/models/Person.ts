@@ -74,7 +74,6 @@ export class Person {
     constructor(params?: personParams) {
         this._nationality = params && params.nationality ? params.nationality : "american";
         this._gender = params && params.gender ? params.gender : (Math.random() < 0.5) ? 'male' : 'female';
-        console.log(this._nationality);
         this._firstName = params && params.firstName ? params.firstName : Person.getName(this._gender, this._nationality);
         this._surname = params && params.surname ? params.surname : surnames[this._nationality][~~(Math.random() * surnames[this._nationality].length)];
         this._family_id = params && params.familyID ? params.familyID : 0;

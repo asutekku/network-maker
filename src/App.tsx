@@ -43,7 +43,7 @@ export default class App extends React.Component<AppProps, AppState> {
         }
     }
 
-    countries: string[] = ['the united states', 'Japan', 'Finland', "Italy"];
+    countries: string[] = ['the united states', 'japan', 'finland', "italy"];
     nationalities: string[] = ["american", "japanese", "finnish", "italian"];
 
     collection: PeopleCollection = new PeopleCollection();
@@ -78,7 +78,7 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     createEdges(): Edge[] {
-        return this.collection.relationships.getAll().map((r: Relationship) => {
+        return this.collection.relationships.getAll().filter((r: Relationship) => r.type.display && r.type.enabled).map((r: Relationship) => {
             return {
                 from: r.from,
                 to: r.to,
@@ -150,9 +150,19 @@ export default class App extends React.Component<AppProps, AppState> {
                         to: child.id,
                         type: relationshipTypes.find((r: RelationshipType) => r.id === "mother"),
                     });
+
                     person1.addRelationShip(rel1);
                     person2.addRelationShip(rel2);
                     relationships = [...relationships, rel1, rel2];
+                    children.forEach((p: Person) => {
+                        let sibling = new Relationship({
+                            from: child.id,
+                            to: p.id,
+                            type: relationshipTypes.find((r: RelationshipType) => r.id === "sibling"),
+                        });
+                        p.addRelationShip(sibling);
+                        relationships.push(sibling);
+                    })
                     children.push(child);
                 }
                 family.addMultiple([person1, person2, ...children]);
@@ -183,6 +193,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
 
     updateGraph = () => {
+        this.setState({selected: undefined});
         this.createFamilies();
         this.generateRelationships();
         this.updateData();
@@ -235,9 +246,12 @@ export default class App extends React.Component<AppProps, AppState> {
     getPerson = (e: any) => {
         let person = this.collection.people.findPersonByID(e.nodes[0]);
         this.setState({selected: person});
-        console.log(person);
     };
 
+    setPersonByID = (e: number) => {
+        let person = this.collection.people.findPersonByID(e);
+        this.setState({selected: person});
+    };
 
     render() {
         return <>
@@ -308,7 +322,7 @@ export default class App extends React.Component<AppProps, AppState> {
                        }} events={{"click": this.getPerson}}/>}
             </div>
             <div className={`sidebar bio-container ${this.state.selected !== undefined ? '' : 'hidden'}`}>
-                <PersonInfo person={this.state.selected} collection={this.collection}/>
+                <PersonInfo person={this.state.selected} collection={this.collection} onClick={this.setPersonByID}/>
             </div>
         </>;
     }
