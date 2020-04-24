@@ -1,13 +1,13 @@
 import React from 'react';
 import ParameterRow from "./ParameterRow";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import fontawesome from '@fortawesome/fontawesome'
-import {faAngleUp, faAngleDown} from "@fortawesome/free-solid-svg-icons";
+import {faAngleUp} from "@fortawesome/free-solid-svg-icons/faAngleUp";
+import {faAngleDown} from "@fortawesome/free-solid-svg-icons/faAngleDown";
 import onClickOutside from "react-onclickoutside";
 
 interface DropdownProps {
     name: string;
-    pluralName:string;
+    pluralName: string;
     list: any[];
     getValue: (value: string[]) => {};
 }
@@ -28,15 +28,13 @@ class Dropdown extends React.Component<DropdownProps, DropdownState> {
             active: true,
             selected: [this.props.list[0].toLowerCase()]
         };
-        // @ts-ignore
-        fontawesome.library.add(faAngleUp, faAngleDown);
     }
 
     check = (e: any) => {
         this.setState({active: !this.state.active})
     };
 
-    handleClickOutside = (evt:any) => {
+    handleClickOutside = (evt: any) => {
         this.setState({
             listOpen: false
         })
@@ -71,13 +69,13 @@ class Dropdown extends React.Component<DropdownProps, DropdownState> {
                         <div
                             className="dd-header-title">{this.state.selected.length === 1 ? this.state.selected[0] : this.state.selected.length > 1 ? `${this.state.selected.length} ${this.props.pluralName}` : "Please select one"}</div>
                         {listOpen
-                            ? <FontAwesomeIcon icon={'angle-up'}/>
-                            : <FontAwesomeIcon icon={'angle-down'}/>
+                            ? <FontAwesomeIcon icon={faAngleUp}/>
+                            : <FontAwesomeIcon icon={faAngleDown}/>
                         }
                     </div>
                     {listOpen && <ul className="dd-list">
                         {list.map((item: string) => (
-                            <li className={`dd-list-item ${this.state.selected.map((s:string)=>s.toLowerCase()).includes(item) ? 'selected' : ''}`}
+                            <li className={`dd-list-item ${this.state.selected.map((s: string) => s.toLowerCase()).includes(item) ? 'selected' : ''}`}
                                 key={item.toLowerCase()} data-key={item.toLowerCase()}
                                 onClick={this.setActive}>{item}</li>
                         ))}

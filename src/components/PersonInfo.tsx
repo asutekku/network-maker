@@ -1,9 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Person} from "../models/Person";
 import {PersonBio} from "../models/PersonBio";
 import {PeopleCollection} from "../models/PeopleCollection";
 import ParameterGroup from "./ParameterGroup";
-import ParameterRow from "./ParameterRow";
 import Row from "./Row";
 import {Relationship} from "../models/Relationship";
 import {Family} from "../models/Family";

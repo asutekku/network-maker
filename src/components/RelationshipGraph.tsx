@@ -3,9 +3,6 @@ import {DataGroup, DataItem, DataSet, Edge, Network, NetworkEvents, Node} from "
 import defaultsDeep from "lodash/fp/defaultsDeep";
 import differenceWith from "lodash/differenceWith";
 import isEqual from "lodash/isEqual";
-import uuid from "uuid";
-import {Person} from "../models/Person";
-
 
 interface GraphState {
     identifier: string | undefined;
@@ -28,8 +25,7 @@ export class Graph extends Component<GraphProps, GraphState> {
     container: Ref<HTMLDivElement> = React.createRef<HTMLDivElement>();
     private edges: DataSet<DataItem | DataGroup | Node | Edge> = new DataSet<DataItem | DataGroup | Node | Edge>();
     private nodes: DataSet<DataItem | DataGroup | Node | Edge> = new DataSet<DataItem | DataGroup | Node | Edge>();
-    // @ts-ignore
-    private Network: Network;
+    private Network: Network | undefined = undefined;
 
     constructor(props: GraphProps) {
         super(props);
@@ -84,15 +80,15 @@ export class Graph extends Component<GraphProps, GraphState> {
         }
 
         if (optionsChange) {
-            this.Network.setOptions(nextProps.options);
+            this.Network!.setOptions(nextProps.options);
         }
 
         if (eventsChange) {
             let events = this.props.events || {};
-            Object.keys(events).forEach((eventName: string) => this.Network.off(eventName as NetworkEvents, events[eventName]));
+            Object.keys(events).forEach((eventName: string) => this.Network!.off(eventName as NetworkEvents, events[eventName]));
 
             events = nextProps.events || {};
-            Object.keys(events).forEach((eventName: string) => this.Network.off(eventName as NetworkEvents, events[eventName]));
+            Object.keys(events).forEach((eventName: string) => this.Network!.off(eventName as NetworkEvents, events[eventName]));
         }
 
         return false;
@@ -111,14 +107,14 @@ export class Graph extends Component<GraphProps, GraphState> {
             for (let nodeId in allNodes) {
                 allNodes[nodeId].color = "rgba(200,200,200,0.5)";
             }
-            let connectedNodes: any[] = this.Network.getConnectedNodes(selectedNode);
+            let connectedNodes: any[] = this.Network!.getConnectedNodes(selectedNode);
             let allConnectedNodes: any[] = [];
 
             // get the second degree nodes
             for (i = 1; i < degrees; i++) {
                 for (j = 0; j < connectedNodes.length; j++) {
                     allConnectedNodes = allConnectedNodes.concat(
-                        this.Network.getConnectedNodes(connectedNodes[j])
+                        this.Network!.getConnectedNodes(connectedNodes[j])
                     );
                 }
             }

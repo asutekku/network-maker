@@ -16,12 +16,14 @@ export declare class Relationship {
 }
 export interface RelationshipType {
     name: string;
+    nameTo: string;
     id: string;
     mutual: boolean;
     type: "family" | "romantic" | "social" | "professional";
     probability: number;
     dashed?: boolean;
     enabled: boolean;
+    display: boolean;
 }
 export declare let relationshipTypes: RelationshipType[];
 export declare enum RomanticRelationshipTypes {

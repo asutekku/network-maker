@@ -43,6 +43,7 @@ export default class App extends React.Component<AppProps, AppState> {
     updateNationalities: (e: string[]) => any;
     updateCountries: (e: string[]) => any;
     getPerson: (e: any) => void;
+    setPersonByID: (e: number) => void;
     render(): JSX.Element;
 }
 export {};
