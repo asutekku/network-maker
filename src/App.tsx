@@ -244,9 +244,14 @@ export default class App extends React.Component<AppProps, AppState> {
     };
 
 
-    setPersonByID = (e: number) => {
-        let person = this.collection.people.findPersonByID(e);
-        this.setState({selected: person});
+    setPersonByID = (e: number | undefined) => {
+        if (e) {
+            let person = this.collection.people.findPersonByID(e);
+            this.setState({selected: person});
+        } else {
+            this.setState({selected: undefined});
+        }
+
     };
 
     getPerson = (e: any) => {
@@ -257,7 +262,7 @@ export default class App extends React.Component<AppProps, AppState> {
     render() {
         return <>
             <div className={'content'}>
-                <div className={"sidebar"}>
+                <div className={"sidebar"} id={"parameters"}>
                     <ParameterGroup name={"General Parameters"}>
                         <Slider name={"Families"} min={1} max={50} identifier={"families"} active={true}
                                 value={this.options.familyCount}

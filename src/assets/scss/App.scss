@@ -46,6 +46,13 @@ $themes: (
   }
 }
 
+@mixin mobile {
+  @media (max-width: 600px) {
+    @content;
+  }
+}
+
+
 body {
   font-family: sans-serif;
   background: $background-light;
@@ -60,15 +67,42 @@ body {
   display: grid;
   grid-template-columns: 300px auto;
   grid-template-rows: auto;
+  grid-template-areas: " block-1 block-2 ";
+
+  @include mobile {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 60% 40%;
+    grid-template-areas: " block-2 " " block-1 ";
+  }
+}
+
+#parameters {
+  grid-area: block-1;
+  overflow: scroll;
+  height: 100%;
+}
+
+#socialNetwork {
+  float: left;
+  grid-area: block-2;
+}
+
+#root, body {
+  padding: 0;
+  margin: 0;
+  height: 100vh;
 }
 
 .sidebar {
   float: left;
 }
 
-#socialNetwork {
-  float: left;
+.content {
+  height: 100%;
 }
+
+
 
 .group-container {
   background: $background-light;
@@ -235,13 +269,46 @@ body {
   top: 0;
   background: $background-light;
   border: 1px solid $border-light;
+  -webkit-box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.51);
+  -moz-box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.51);
+  box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.51);
   @include dark-mode {
     background: $background-dark;
     border-color: $border-dark;
   }
-  width: 20%;
+  @include mobile {
+    width: 100vw;
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+    z-index: 555;
+    height: 60%;
+    overflow: scroll;
+  }
+  width: 400px;
   margin: 10px;
   height: auto;
+
+  .close-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: $main-color;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+
+    &:hover {
+      background: $main-color-dark;
+    }
+  }
+
+  h2 {
+    text-align: center;
+  }
 
   p {
     padding-left: 10px;

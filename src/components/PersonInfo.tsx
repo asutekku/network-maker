@@ -52,37 +52,40 @@ const PersonInfo = (props: PersonInfoProps) => {
     return (
         <>{
             p && <>
-                <div className={'bio-title'}>
-                    <h2>{p !== undefined ? p.getFullName() : 'No one selected'}</h2>
-                </div>
-                <ParameterGroup name={'Description'}>
-                    <p>{b !== undefined ? b.getIntroduction() : ''}</p>
-                </ParameterGroup>
-                {p && <ParameterGroup name={'About'}>
-                    <Row title={'First Name'} values={p.firstName}/>
-                    <Row title={'Surname'} values={p.surname}/>
-                    <Row title={'Age'} values={p.age}/>
-                    <Row title={'Gender'} values={p.gender}/>
-                    <Row title={'Lives in'} values={p.country}/>
-                    <Row title={'Nationality'} values={p.nationality}/>
-                </ParameterGroup>
-                }
-                {f &&
-                <ParameterGroup name={'Family'}>
-                    <Row title={'Family Name'} values={f.name}/>
-                    {
-                        RelationShips("family", true)
+                <div className={'close-button'} onClick={() => props.onClick()}>Close</div>
+                <div className={'bio-inner'}>
+                    <div className={'bio-title'}>
+                        <h2>{p !== undefined ? p.getFullName() : 'No one selected'}</h2>
+                    </div>
+                    <ParameterGroup name={'Description'}>
+                        <p>{b !== undefined ? b.getIntroduction() : ''}</p>
+                    </ParameterGroup>
+                    {p && <ParameterGroup name={'About'}>
+                        <Row title={'First Name'} values={p.firstName}/>
+                        <Row title={'Surname'} values={p.surname}/>
+                        <Row title={'Age'} values={p.age}/>
+                        <Row title={'Gender'} values={p.gender}/>
+                        <Row title={'Lives in'} values={p.country}/>
+                        <Row title={'Nationality'} values={p.nationality}/>
+                    </ParameterGroup>
                     }
-                </ParameterGroup>
-                }
-                {
-                    relationships &&
-                    <ParameterGroup name={'Relationships'}>
+                    {f &&
+                    <ParameterGroup name={'Family'}>
+                        <Row title={'Family Name'} values={f.name}/>
                         {
-                            RelationShips("family", false)
+                            RelationShips("family", true)
                         }
                     </ParameterGroup>
-                }</>
+                    }
+                    {
+                        relationships &&
+                        <ParameterGroup name={'Relationships'}>
+                            {
+                                RelationShips("family", false)
+                            }
+                        </ParameterGroup>
+                    }</div>
+            </>
         }
         </>
     );
