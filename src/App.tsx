@@ -243,13 +243,14 @@ export default class App extends React.Component<AppProps, AppState> {
         this.options.countries = e;
     };
 
-    getPerson = (e: any) => {
-        let person = this.collection.people.findPersonByID(e.nodes[0]);
-        this.setState({selected: person});
-    };
 
     setPersonByID = (e: number) => {
         let person = this.collection.people.findPersonByID(e);
+        this.setState({selected: person});
+    };
+
+    getPerson = (e: any) => {
+        let person = this.collection.people.findPersonByID(e.nodes[0]);
         this.setState({selected: person});
     };
 
@@ -319,7 +320,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                    }
                                },
                            }, physics: false,
-                       }} events={{"click": this.getPerson}}/>}
+                       }} events={{"click": this.getPerson}} selected={this.state.selected}/>}
             </div>
             <div className={`sidebar bio-container ${this.state.selected !== undefined ? '' : 'hidden'}`}>
                 <PersonInfo person={this.state.selected} collection={this.collection} onClick={this.setPersonByID}/>

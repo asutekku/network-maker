@@ -1,8 +1,9 @@
 import React, {Component, Ref} from "react";
-import {DataGroup, DataItem, DataSet, Edge, Network, NetworkEvents, Node} from "vis";
+import {DataGroup, DataItem, DataSet, Edge, IdType, Network, NetworkEvents, Node} from "vis";
 import defaultsDeep from "lodash/fp/defaultsDeep";
 import differenceWith from "lodash/differenceWith";
 import isEqual from "lodash/isEqual";
+import {Person} from "../models/Person";
 
 interface GraphState {
     identifier: string | undefined;
@@ -18,6 +19,7 @@ interface GraphProps {
     identifier?: any,
     options?: any
     events?: any
+    selected?: Person;
 }
 
 export class Graph extends Component<GraphProps, GraphState> {
@@ -53,6 +55,7 @@ export class Graph extends Component<GraphProps, GraphState> {
         let edgesChange = !isEqual(this.props.graph.edges, nextProps.graph.edges);
         let optionsChange = !isEqual(this.props.options, nextProps.options);
         let eventsChange = !isEqual(this.props.events, nextProps.events);
+        let selectedhange = !isEqual(this.props.selected, nextProps.selected);
 
         if (nodesChange) {
 
@@ -89,6 +92,16 @@ export class Graph extends Component<GraphProps, GraphState> {
 
             events = nextProps.events || {};
             Object.keys(events).forEach((eventName: string) => this.Network!.off(eventName as NetworkEvents, events[eventName]));
+        }
+        if (selectedhange && nextProps.selected !== undefined) {
+            let params: { nodes: any[] } = {nodes: []};
+            let node = this.nodes.get(nextProps.selected.id);
+            let id: IdType = node!.id!;
+            params.nodes[0] = id;
+            this.Network!.selectNodes([id]);
+            this.neighbourhoodHighlight(params);
+        } if (selectedhange && nextProps.selected == undefined){
+            this.Network!.selectNodes([]);
         }
 
         return false;
