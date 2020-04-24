@@ -10,7 +10,7 @@ import {Person} from "./models/Person";
 import {DataGroup, DataItem, DataSet, Edge, Network, Node} from "vis";
 import Dropdown from "./components/Dropdown";
 import PersonInfo from "./components/PersonInfo";
-import ReactSlider from "react-slider";
+import Div100vh from 'react-div-100vh'
 
 export interface AppProps {
 
@@ -261,75 +261,81 @@ export default class App extends React.Component<AppProps, AppState> {
 
     render() {
         return <>
-            <div className={'content'}>
-                <div className={"sidebar"} id={"parameters"}>
-                    <ParameterGroup name={"General Parameters"}>
-                        <Slider name={"Families"} min={1} max={50} identifier={"families"} active={true}
-                                value={this.options.familyCount}
-                                onChange={this.updateFamilyCount}/>
-                        <Slider name={"Singles %"} min={1} max={100} identifier={"singles"} active={true}
-                                value={this.options.singleProbability}
-                                onChange={this.updateSingles}/>
-                        <Dropdown name={'Nationality'} pluralName={"Nationalities"}
-                                  list={this.nationalities}
-                                  getValue={this.updateNationalities}/>
-                        <Dropdown name={'Country'} pluralName={"Countries"} list={this.countries}
-                                  getValue={this.updateCountries}/>
-                    </ParameterGroup>
-                    <ParameterGroup name={"Family Parameters"}>
-                        <Slider name={"Children"} min={0} max={10} identifier={"minChildren"} active={true}
-                                value={[this.options.children[0], this.options.children[1]]}
-                                onChange={this.updateChildren}/>
-                    </ParameterGroup>
-                    <ParameterGroup name={"Relationship Parameters"}>
-                        <Slider name={"Relationships"} min={1} max={10} identifier={"minRelationships"}
-                                active={true} value={[this.options.minRelationship, this.options.maxRelationship]}
-                                onChange={this.updateRelationships}/>
-                        <ParameterGroup name={"Finetune relations"}>
-                            {relationshipTypes.filter((r: RelationshipType) => r.type === "social").map((r: RelationshipType) => {
-                                return <Slider name={r.name} min={1} max={100} identifier={r.id} active={false}
-                                               key={r.id} value={r.probability * 10} onChange={this.updateFamilyCount}/>
-                            })}
+            <Div100vh>
+                <div className={'content'}>
+                    <div className={"sidebar"} id={"parameters"}>
+                        <ParameterGroup name={"General Parameters"}>
+                            <Slider name={"Families"} min={1} max={50} identifier={"families"} active={true}
+                                    value={this.options.familyCount}
+                                    onChange={this.updateFamilyCount}/>
+                            <Slider name={"Singles %"} min={1} max={100} identifier={"singles"} active={true}
+                                    value={this.options.singleProbability}
+                                    onChange={this.updateSingles}/>
+                            <Dropdown name={'Nationality'} pluralName={"Nationalities"}
+                                      list={this.nationalities}
+                                      getValue={this.updateNationalities}/>
+                            <Dropdown name={'Country'} pluralName={"Countries"} list={this.countries}
+                                      getValue={this.updateCountries}/>
                         </ParameterGroup>
-                    </ParameterGroup>
-                    <input type={"button"} value={"Update"} onClick={this.updateGraph}/>
+                        <ParameterGroup name={"Family Parameters"}>
+                            <Slider name={"Children"} min={0} max={10} identifier={"minChildren"} active={true}
+                                    value={[this.options.children[0], this.options.children[1]]}
+                                    onChange={this.updateChildren}/>
+                        </ParameterGroup>
+                        <ParameterGroup name={"Relationship Parameters"}>
+                            <Slider name={"Relationships"} min={1} max={10} identifier={"minRelationships"}
+                                    active={true} value={[this.options.minRelationship, this.options.maxRelationship]}
+                                    onChange={this.updateRelationships}/>
+                            <ParameterGroup name={"Finetune relations"}>
+                                {relationshipTypes.filter((r: RelationshipType) => r.type === "social").map((r: RelationshipType) => {
+                                    return <Slider name={r.name} min={1} max={100} identifier={r.id} active={false}
+                                                   key={r.id} value={r.probability * 10}
+                                                   onChange={this.updateFamilyCount}/>
+                                })}
+                            </ParameterGroup>
+                        </ParameterGroup>
+                        <div className={'button-container'}>
+                            <input className={'button-wide'} type={"button"} value={"Update"}
+                                   onClick={this.updateGraph}/>
+                        </div>
+                    </div>
+                    {this.state.data &&
+                    <Graph graph={this.state.data} identifier={"socialNetwork"} style={{width: "100%", height: "100%"}}
+                           options={{
+                               nodes: {
+                                   shape: "box",
+                                   scaling: {
+                                       min: 10,
+                                       max: 30,
+                                       label: {
+                                           min: 8,
+                                           max: 30,
+                                           drawThreshold: 5,
+                                           maxVisible: 20
+                                       }
+                                   }
+                               }, edges: {
+                                   width: 0.15,
+                                   color: {inherit: "from"},
+                                   smooth: {
+                                       type: "horizontal"
+                                   }, scaling: {
+                                       min: 10,
+                                       max: 30,
+                                       label: {
+                                           min: 8,
+                                           max: 30,
+                                           drawThreshold: 10,
+                                           maxVisible: 30
+                                       }
+                                   },
+                               }, physics: false,
+                           }} events={{"click": this.getPerson}} selected={this.state.selected}/>}
                 </div>
-                {this.state.data &&
-                <Graph graph={this.state.data} identifier={"socialNetwork"} style={{width: "100%", height: "100%"}}
-                       options={{
-                           nodes: {
-                               shape: "box",
-                               scaling: {
-                                   min: 10,
-                                   max: 30,
-                                   label: {
-                                       min: 8,
-                                       max: 30,
-                                       drawThreshold: 5,
-                                       maxVisible: 20
-                                   }
-                               }
-                           }, edges: {
-                               width: 0.15,
-                               color: {inherit: "from"},
-                               smooth: {
-                                   type: "horizontal"
-                               }, scaling: {
-                                   min: 10,
-                                   max: 30,
-                                   label: {
-                                       min: 8,
-                                       max: 30,
-                                       drawThreshold: 10,
-                                       maxVisible: 30
-                                   }
-                               },
-                           }, physics: false,
-                       }} events={{"click": this.getPerson}} selected={this.state.selected}/>}
-            </div>
-            <div className={`sidebar bio-container ${this.state.selected !== undefined ? '' : 'hidden'}`}>
-                <PersonInfo person={this.state.selected} collection={this.collection} onClick={this.setPersonByID}/>
-            </div>
+                <div className={`sidebar bio-container ${this.state.selected !== undefined ? '' : 'hidden'}`}>
+                    <PersonInfo person={this.state.selected} collection={this.collection} onClick={this.setPersonByID}/>
+                </div>
+            </Div100vh>
         </>;
     }
 }
